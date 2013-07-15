@@ -1,0 +1,3 @@
+bigfoot_import:
+    resource: "@BigfootImportBundle/Controller"
+    type:     annotation

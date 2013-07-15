@@ -1,0 +1,49 @@
+{% extends 'BigfootCoreBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>DataSource list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Domain</th>
+                <th>Port</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('admin_datasource_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.domain }}</td>
+                <td>{{ entity.port }}</td>
+                <td>{{ entity.username }}</td>
+                <td>{{ entity.password }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('admin_datasource_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('admin_datasource_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('admin_datasource_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

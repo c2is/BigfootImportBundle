@@ -1,0 +1,14 @@
+parameters:
+    bigfoot_import.ftpclient.class: 'Bigfoot\Bundle\ImportBundle\Services\FtpClient'
+    bigfoot_import.csvparser.class: 'Bigfoot\Bundle\ImportBundle\Services\CsvParser'
+
+services:
+    bigfoot_import.ftpclient:
+        class: '%bigfoot_import.ftpclient.class%'
+    bigfoot_import.csvparser:
+        class: '%bigfoot_import.csvparser.class%'
+
+    kernel.listener.bigfoot_import_menu_listener:
+        class: Bigfoot\Bundle\ImportBundle\Listener\MenuListener
+        tags:
+            - { name: kernel.event_listener, event: bigfoot.menu.generate, method: onMenuGenerate }
