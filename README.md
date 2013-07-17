@@ -13,7 +13,7 @@ Add 'BigFoot/ImportBundle' into your composer.json file in the 'require' section
 "require": {
     ...
     ...
-    "bigfoot/seo-bundle": "dev-master",
+    "bigfoot/import-bundle": "dev-master",
 }
 ```
 
@@ -195,13 +195,29 @@ class QualitelisNotesDataMapper extends AbstractSimpleDataMapper
 }
 ```
 
+Configuration
+-------------
+
+You could define availables protocols for Datasource in your `config.yml`. By default, only http and ftp protocols are availables.
+
+```yml
+# app/config/config.yml
+
+bigfoot_import:
+    datasource:
+        protocol:
+            ftp: FTP
+            http: HTTP
+            scp: SCP
+            ssh: SSH
+```
 
 Usage
 -----
 
 Go to the admin interface available at /admin/datasource/.
 
-Add a FTP configuration (name, domain, port, username, password).
+Add a configuration (name, protocol, domain, port, username, password).
 
 To import, write this into an action method:
 
@@ -216,7 +232,7 @@ public function indexAction()
     /* Where 'nameOfTheFtpConfiguration' is the name you entered for the FTP configuration  */
     $object = $em->getRepository('BigfootImportBundle:DataSource')->findOneBy(array('name' => 'nameOfTheFtpConfiguration'));
 
-    $client = $this->get('bigfoot_import.ftpclient');
+    $client = $this->get('bigfoot_import.client');
     $client->init($object->getDomain());
     $client->setAuth($object->getUsername(),$object->getPassword());
 

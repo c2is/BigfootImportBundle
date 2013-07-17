@@ -8,6 +8,7 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Protocol</th>
                 <th>Domain</th>
                 <th>Port</th>
                 <th>Username</th>
@@ -20,6 +21,7 @@
             <tr>
                 <td><a href="{{ path('admin_datasource_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
+                <td>{{ entity.protocol }}</td>
                 <td>{{ entity.domain }}</td>
                 <td>{{ entity.port }}</td>
                 <td>{{ entity.username }}</td>

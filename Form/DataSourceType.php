@@ -9,11 +9,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * Imports settings
  * @Author: S.huot s.huot@c2is.fr
+ * @Author: S.Plançon s.plancon@c2is.fr
  */
 class DataSourceType extends AbstractType
 {
     /**
-     * Set the form made up of a name, a domain, a port, a username and a password
+     * Set the form made up of a name, a protocol, a domain, a port, a username and a password
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -21,6 +22,9 @@ class DataSourceType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('protocol', 'protocol', array(
+                'empty_value' => 'Choose protocol'
+            ))
             ->add('domain')
             ->add('port')
             ->add('username')

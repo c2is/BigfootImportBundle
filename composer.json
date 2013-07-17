@@ -9,6 +9,10 @@
             "name": "S.Huot",
             "email": "s.huot@c2is.fr"
         }
+        {
+            "name": "S.Plançon",
+            "email": "s.plancon@c2is.fr"
+        }
     ],
     "require": {
         "bigfoot/core-bundle": "dev-master"

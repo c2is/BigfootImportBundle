@@ -29,5 +29,13 @@ class BigfootImportExtension extends Extension
 
         $container->setParameter('nb_ligne_par_lot.ftp.csv', $nb_ligne_par_lot);
         $container->setParameter('import.max_execution_time', $config['max_execution_time']);
+
+        if (!isset($config['datasource']['protocols'])) {
+            $config['datasource']['protocols'] = array(
+                'ftp' => "FTP",
+                'http' => "HTTP",
+            );
+        }
+        $container->setParameter('import.datasource.protocols', $config['datasource']['protocols']);
     }
 }

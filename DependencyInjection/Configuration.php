@@ -22,6 +22,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('datasource')
+                    ->prototype('array')
+                    ->prototype('variable')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('nb_ligne_par_lot')
                     ->prototype('array')
                     ->useAttributeAsKey('name')
