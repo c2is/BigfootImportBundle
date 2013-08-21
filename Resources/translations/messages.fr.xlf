@@ -18,6 +18,10 @@
                 <source>Add a datasource</source>
                 <target>Ajouter une nouvelle source</target>
             </trans-unit>
+            <trans-unit id="5">
+                <source>Datasources</source>
+                <target>Sources de données</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

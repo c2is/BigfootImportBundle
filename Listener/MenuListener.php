@@ -21,7 +21,9 @@ class MenuListener
         $menu = $event->getMenu();
 
         if ($menu->getName() == 'sidebar_menu') {
-            $menu->addItem(new Item('sidebar_settings_import', 'Import Settings','admin_datasource'));
+            $importMenu = new Item('sidebar_settings_import', 'Imports');
+            $importMenu->addChild(new Item('sidebar_settings_import', 'Datasources','admin_datasource'));
+            $menu->addItem($importMenu);
         }
     }
 }
