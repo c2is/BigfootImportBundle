@@ -1,12 +1,15 @@
 parameters:
     bigfoot_import.client.class: 'Bigfoot\Bundle\ImportBundle\Services\Client'
     bigfoot_import.csvparser.class: 'Bigfoot\Bundle\ImportBundle\Services\CsvParser'
+    bigfoot_import.xmlmapper.class: 'Bigfoot\Bundle\ImportBundle\Services\DataMapper\XmlMapper'
 
 services:
     bigfoot_import.client:
         class: '%bigfoot_import.client.class%'
     bigfoot_import.csvparser:
         class: '%bigfoot_import.csvparser.class%'
+    bigfoot_import.xmlmapper:
+        class: '%bigfoot_import.xmlmapper.class%'
 
     form.type.protocol:
         class: Bigfoot\Bundle\ImportBundle\Form\ProtocolType

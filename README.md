@@ -3,6 +3,14 @@ ImportBundle
 
 ImportBundle is part of the framework BigFoot created by C2IS.
 
+File formats supported :
+* CSV
+* XML
+
+How to import XML file
+----------------------
+
+See [XmlMapper Documentation](./Resources/doc/xmlmapper.md)
 
 Installation
 ------------
