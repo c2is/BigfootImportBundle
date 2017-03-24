@@ -2,8 +2,12 @@
 
 namespace Bigfoot\Bundle\ImportBundle\Iterator;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+
 /**
  * Class XmlIterator
+ *
  * @package Bigfoot\Bundle\ImportBundle\Iterator
  */
 class XmlIterator implements \Iterator, \Countable
@@ -20,20 +24,29 @@ class XmlIterator implements \Iterator, \Countable
     /** @var array */
     protected $namespaces;
 
+    /** @var \Psr\Log\LoggerInterface */
+    protected $logger;
+
     /**
-     * @param string|\DOMDocument $xml
-     * @param string $xpath
-     * @param array $namespaces
+     * @param string|\DOMDocument      $xml
+     * @param string                   $xpath
+     * @param array                    $namespaces
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct($xml, $xpath, $namespaces = array())
+    public function __construct($xml, $xpath, $namespaces = array(), LoggerInterface $logger = null)
     {
+        if (!$logger) {
+            $logger = new NullLogger();
+        }
+
         if ($xml instanceof \DOMDocument) {
             $this->content = $xml->saveXML();
         } else {
             $this->content = $xml;
         }
 
-        $this->xpath = $xpath;
+        $this->logger     = $logger;
+        $this->xpath      = $xpath;
         $this->namespaces = $namespaces;
         $this->rewind();
     }
@@ -43,16 +56,25 @@ class XmlIterator implements \Iterator, \Countable
      */
     public function rewind()
     {
-        libxml_use_internal_errors(true);
+        $logger               = $this->logger;
+        $content              = $this->content;
+        $previousErrorSetting = libxml_use_internal_errors(false);
 
         $dom = new \DOMDocument();
-        @$dom->loadXML($this->content);
+        set_error_handler(
+            function ($errno, $errstr) use ($logger, $content) {
+                $logger->warning(
+                    $errstr,
+                    ['source' => 'XML parsing warning on \DOMDocument::loadXML', 'error_code' => $errno, 'xml' => $content]
+                );
+            },
+            E_WARNING
+        );
+        $dom->loadXML($this->content, LIBXML_VERSION >= 20900 ? LIBXML_PARSEHUGE : null);
+        restore_error_handler();
         $this->currentContent = $dom;
 
-        unset($dom);
-
-        libxml_use_internal_errors(false);
-        libxml_use_internal_errors(true);
+        libxml_use_internal_errors($previousErrorSetting);
     }
 
     /**
@@ -87,7 +109,7 @@ class XmlIterator implements \Iterator, \Countable
      */
     public function valid()
     {
-        return (boolean) $this->getCurrentElement();
+        return (boolean)$this->getCurrentElement();
     }
 
     /**
@@ -139,6 +161,7 @@ class XmlIterator implements \Iterator, \Countable
 
     /**
      * @param array $namespaces
+     *
      * @return $this
      */
     public function setNamespaces(array $namespaces)
@@ -151,6 +174,7 @@ class XmlIterator implements \Iterator, \Countable
     /**
      * @param string $prefix
      * @param string $namespace
+     *
      * @return $this
      */
     public function addNamespace($prefix, $namespace)
