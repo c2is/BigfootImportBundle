@@ -2,16 +2,16 @@
 
 namespace Bigfoot\Bundle\ImportBundle\Manager;
 
+use Bigfoot\Bundle\CoreBundle\Entity\TranslationRepository;
 use Bigfoot\Bundle\ImportBundle\Translation\DataTranslationQueue;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\ORM\EntityManager;
-use mageekguy\atoum\tests\units\asserters\string;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\Console\Output\OutputInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class ImportedDataManager
@@ -24,13 +24,13 @@ class ImportedDataManager
     /** @var int */
     protected $iteration = 0;
 
-    /** @var \Doctrine\ORM\EntityManager */
+    /** @var EntityManager */
     protected $entityManager;
 
-    /** @var \Symfony\Component\Validator\Validator */
+    /** @var ValidatorInterface */
     protected $validator;
 
-    /** @var \Symfony\Component\PropertyAccess\PropertyAccessor */
+    /** @var PropertyAccessor */
     protected $propertyAccessor;
 
     /** @var DataTranslationQueue */
@@ -61,12 +61,12 @@ class ImportedDataManager
     protected $environment;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
-     * @param \Symfony\Component\Validator\Validator $validator
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessor $propertyAccessor
-     * @param \Bigfoot\Bundle\ImportBundle\Translation\DataTranslationQueue $translationQueue
-     * @param \Doctrine\Common\Annotations\FileCacheReader $annotationReader
-     * @param \Bigfoot\Bundle\CoreBundle\Entity\TranslationRepository $bigfootTransRepo
+     * @param EntityManager $entityManager
+     * @param ValidatorInterface $validator
+     * @param PropertyAccessor $propertyAccessor
+     * @param DataTranslationQueue $translationQueue
+     * @param CachedReader $annotationReader
+     * @param TranslationRepository $bigfootTransRepo
      * @param transversalDataManager $transversalDataManager
      * @param $environment
      */
@@ -148,7 +148,7 @@ class ImportedDataManager
 
         $propertyAccessor = $this->propertyAccessor;
         $entityClass      = ltrim(get_class($entity), '\\');
-        $property         = $this->getImportedIdentifier($entityClass);
+        $property         = $this->getImportedIdentifier();
 
         try {
             $importedId = $propertyAccessor->getValue($entity, $property);
@@ -192,7 +192,7 @@ class ImportedDataManager
     {
         if ($this->environment != 'prod') {
             $this->timer = new Stopwatch();
-            $this->preFlushVerbose($this->timer->start('flushOp'));
+            $this->preFlushVerbose();
         }
 
         $this->processTranslations();
@@ -243,7 +243,7 @@ class ImportedDataManager
     /**
      * @throws \Exception
      */
-    protected function preFlushVerbose(StopwatchEvent $event)
+    protected function preFlushVerbose()
     {
         $managed = $this->getManagedEntity();
         $time = new \DateTime('now');
@@ -357,7 +357,7 @@ class ImportedDataManager
             throw new \Exception('You must declare a property identifier for this data manager. The property identifier must be a accessible property in your entities.');
         }
 
-        $property    = $this->getImportedIdentifier($class);
+        $property    = $this->getImportedIdentifier();
         $entityClass = ltrim($class, '\\');
 
         $entity = null;
@@ -407,8 +407,7 @@ class ImportedDataManager
     protected function getImportedId($entity)
     {
         $propertyAccessor = $this->propertyAccessor;
-        $entityClass      = get_class($entity);
-        $property         = $this->getImportedIdentifier($entityClass);
+        $property         = $this->getImportedIdentifier();
 
         return $propertyAccessor->getValue($entity, $property);
     }
