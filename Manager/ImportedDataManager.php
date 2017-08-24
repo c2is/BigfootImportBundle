@@ -192,6 +192,7 @@ class ImportedDataManager
     {
         if ($this->environment != 'prod') {
             $this->timer = new Stopwatch();
+            $this->timer->start('flushOp');
             $this->preFlushVerbose();
         }
 
