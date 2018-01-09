@@ -40,7 +40,7 @@ services:
             - { name: kernel.event_subscriber }
 
     bigfoot_import.data.manager:
-        class: %bigfoot_import.data.manager.class%
+        class: '%bigfoot_import.data.manager.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@validator'
@@ -52,7 +52,7 @@ services:
             - '%kernel.environment%'
 
     bigfoot_import.data.mapper:
-        class: %bigfoot_import.data.mapper.class%
+        class: '%bigfoot_import.data.mapper.class%'
         abstract: true
         arguments:
             - '@doctrine.orm.entity_manager'
@@ -60,13 +60,13 @@ services:
             - '@bigfoot_import.transversal_data.manager'
 
     bigfoot_import.translation.queue:
-        class: %bigfoot_import.translation.queue.class%
+        class: '%bigfoot_import.translation.queue.class%'
 
     bigfoot_import.data.mapper.factory:
-        class: %bigfoot_import.data.mapper.factory.class%
+        class: '%bigfoot_import.data.mapper.factory.class%'
 
     bigfoot_import.transversal_data.manager:
-        class: %bigfoot_import.transversal_data.manager.class%
+        class: '%bigfoot_import.transversal_data.manager.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@property_accessor'
