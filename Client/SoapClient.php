@@ -2,6 +2,8 @@
 
 namespace Bigfoot\Bundle\ImportBundle\Client;
 
+use Bigfoot\Bundle\ImportBundle\Exception\EmptyResponseException;
+
 /**
  * Class SoapClient
  *
@@ -123,6 +125,10 @@ class SoapClient extends \SoapClient
         $responseHeader = '';
 
         $response = parent::__doRequest($request, $location, $action, $version);
+
+        if (empty($response)) {
+            throw new EmptyResponseException();
+        }
 
         $soap = new \DOMDocument('1.0', 'UTF-8');
         $soap->loadXML($response);
